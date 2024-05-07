@@ -9,6 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
-    Optional<Student> findStudentById(Long id);
-    List<Student> findStudentByName(String name);
+    List<Student> findByNameOrderByName(String name);
+    Optional<Student> findById(Long id);
+    Optional<Student> findByName(String name);
 }

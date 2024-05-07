@@ -26,21 +26,22 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Student created: \n" + createdStudent);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("search/{id}")
     public ResponseEntity<?> getStudentById(@PathVariable Long id) {
         Optional<Student> student = studentRepository.findById(id);
         return student.map(
                 value -> ResponseEntity.ok().body(value)).orElseGet(()
-                            -> ResponseEntity.notFound().build());
+                -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("search")
-    public ResponseEntity<?> getStudentByName(@RequestParam String name) {
-        if (name == null) {
-            List<Student> students = studentRepository.findAll();
-            return ResponseEntity.ok().body(students);
+    public ResponseEntity<?> getStudents(@RequestParam(required = false) String name) {
+        List<Student> students;
+        if (name == null || name.isEmpty()) {
+            students = studentRepository.findAllByOrderByName();
+        } else {
+            students = studentRepository.findByNameOrderByName(name);
         }
-        List<Student> students = studentRepository.findByNameOrderByName(name);
         return ResponseEntity.ok().body(students);
     }
 }
